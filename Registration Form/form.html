@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form</title>
+  </head>
+  <body>
+    <form action="#">
+      <label for="name">Name</label>
+      <input type="text" name="name" id="name" />
+      <label for="email">Email</label>
+      <input type="email" name="emai;" id="email" />
+      <button>Submit</button>
+    </form>
+    <script>
+      btn = document.querySelector("button");
+      nameField = document.querySelector("#name");
+      mailField = document.querySelector("#email");
+
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        name = nameField.value;
+        email = mailField.value;
+        if (name === "" || email === "")
+          window.alert("Kindly check the details");
+        else console.log(name + " " + email);
+      });
+
+      btn.addEventListener("mouseover", (event) => {
+        event.preventDefault();
+        event.target.style.color = "green";
+      });
+
+      btn.addEventListener("mouseout", (event) => {
+        event.preventDefault();
+        event.target.style.color = "black";
+      });
+    </script>
+  </body>
+</html>

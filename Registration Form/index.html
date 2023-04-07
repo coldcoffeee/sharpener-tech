@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Book A Call</title>
+  </head>
+  <style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(-45deg, blue, purple);
+}
+
+.container {
+  background-color: rgba(250, 235, 215, 0.785);
+  border-radius: 10px;
+  overflow: hidden;
+  width: 40%;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.upper {
+  background-color: rgba(250, 235, 215, 0.68);
+  height: 30%;
+  width: 100%;
+  border-bottom: 1px solid black;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  position: absolute;
+  font-size: 400%;
+  opacity: 20%;
+  top: 5%;
+}
+
+h2 {
+  position: absolute;
+  top: 25%;
+}
+
+p {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 5px;
+}
+
+.lower {
+  width: 100%;
+  height: 70%;
+  font-size: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: start;
+  position: relative;
+  padding: 40px;
+}
+
+input {
+  width: 100%;
+  height: 2rem;
+  font-size: 1.2rem;
+  margin: 0% 0%;
+  border-radius: 5px;
+  border: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+select {
+  height: 2rem;
+  font-size: 1.2rem;
+}
+
+.timings {
+  width: 100%;
+  display: flex;
+}
+
+button {
+  position: absolute;
+  left: 50%;
+  bottom: 1%;
+  width: 60%;
+  transform: translate(-50%, 0);
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  padding: 5px 0;
+}
+
+  </style>
+  <body>
+    <div class="container">
+      <div class="upper">
+        <h1>Call</h1>
+        <h2>Book a call</h2>
+        <p>
+          Book a call slot and our representative will call you within 1hr of
+          selected time.
+        </p>
+      </div>
+      <div class="lower">
+          <label for="name">Name</label>
+          <input type="text" name="name" id="name" />
+          <label for="mail">Email</label>
+          <input type="email" name="mail" id="mail" />
+          <label for="phone">Phone</label>
+          <input type="number" name="phone" id="phone" />
+          <label for="timings">Time for Call</label>
+          <div class="timings" name="timings">
+            <input type="date" name="date" id="date" />
+            <select name="time" id="time">
+                <option value="9">9:00</option>
+                <option value="10">10:00</option>
+                <option value="11">11:00</option>
+                <option value="12">12:00</option>
+                <option value="13">13:00</option>
+                <option value="14">14:00</option>
+                <option value="15">15:00</option>
+                <option value="16">16:00</option>
+                <option value="17">17:00</option>
+                <option value="18">18:00</option>
+            </select>
+          </div>
+          <button onclick="logData()">GET A CALL</button>
+        </form>
+      </div>
+    </div>
+    <script src="./script.js"></script>
+  </body>
+</html>
