@@ -1,19 +1,50 @@
-document.querySelectorAll(".list-group-item").forEach((element) => {
-  element.style.fontWeight = "bold";
-});
+/**
+ * 
+parentElement
+lastelementchild
+lastchild
+createchild
+firstelementchild
+firstchild
+nextsibling
+nextelementsibling
+previoussibling
+previouselementsibling
+createelement
+setAttribute
+createtesxtnode
+appendchild
+ */
 
-document.querySelectorAll(".list-group-item")[2].style.color = "green";
+const container = document.getElementById("main");
 
-const li = document.getElementsByTagName("li");
+container.parentElement.style.backgroundColor = "green";
 
-li[1].style.backgroundColor = "green";
+// console.log(container.lastElementChild);
+container.lastElementChild.style.fontWeight = "bold";
 
-li[2].style.opacity = "0";
+const listGroup = document.querySelector(".list-group");
 
-const items = document.querySelectorAll("li");
+console.log(listGroup.lastChild);
 
-items.forEach((e) => {
-  e.style.backgroundColor = "green";
-});
+listGroup.firstElementChild.style.backgroundColor = "yellow";
 
-items[1].style.color = "green";
+console.log(listGroup.firstChild);
+
+const listItems = document.querySelectorAll("li");
+
+const item2 = listItems[1];
+
+item2.nextElementSibling.textContent = "Changed third item";
+
+item2.nextSibling.textContent = "whitespace sibling";
+
+item2.previousElementSibling.textContent = "Changed first item";
+
+item2.previousSibling.textContent = "whitespace sibling prev";
+
+const newLi = document.createElement("li");
+newLi.textContent = "newly added item";
+newLi.setAttribute("style", "color: blue");
+
+listGroup.appendChild(newLi);
