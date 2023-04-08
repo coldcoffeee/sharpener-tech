@@ -48,3 +48,8 @@ newLi.textContent = "newly added item";
 newLi.setAttribute("style", "color: blue");
 
 listGroup.appendChild(newLi);
+
+document.getElementById("header-title").previousSibling.textContent = "HEllo";
+
+listItems[0].previousSibling.textContent = "HEllo";
+//
