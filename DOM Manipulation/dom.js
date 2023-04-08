@@ -6,9 +6,14 @@ document.querySelectorAll(".list-group-item")[2].style.color = "green";
 
 const li = document.getElementsByTagName("li");
 
-const item5 = document.createElement("li");
-item5.textContent = "Item 5";
+li[1].style.backgroundColor = "green";
 
-li[0].parentNode.insertBefore(item5, li[3].nextSibling);
+li[2].style.opacity = "0";
 
-console.log(li);
+const items = document.querySelectorAll("li");
+
+items.forEach((e) => {
+  e.style.backgroundColor = "green";
+});
+
+items[1].style.color = "green";
