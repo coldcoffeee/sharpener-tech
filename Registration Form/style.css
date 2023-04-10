@@ -93,11 +93,22 @@ select {
   display: flex;
 }
 
-button {
+.util:first-of-type {
   position: absolute;
-  left: 50%;
+  left: 25%;
   bottom: 1%;
-  width: 60%;
+  width: 30%;
+  transform: translate(-50%, 0);
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  padding: 5px 0;
+}
+.util:last-of-type {
+  position: absolute;
+  right: 0;
+  bottom: 1%;
+  width: 30%;
   transform: translate(-50%, 0);
   font-size: 1.2rem;
   margin-bottom: 5px;
@@ -143,9 +154,20 @@ td:last-of-type {
 
 .btn-del {
   font-size: 0.8rem;
-  transform: translate(-75%, 7%);
+  transform: translate(-7%, 7%);
   position: relative;
   background-color: red;
   color: white;
   border-radius: 5px;
+  padding: 0 5%;
+}
+
+.btn-edit {
+  font-size: 0.8rem;
+  transform: translate(0%, 7%);
+  position: relative;
+  background-color: blue;
+  color: white;
+  border-radius: 5px;
+  padding: 0 5%;
 }
