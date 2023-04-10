@@ -1,55 +1,75 @@
-/**
- * 
-parentElement
-lastelementchild
-lastchild
-createchild
-firstelementchild
-firstchild
-nextsibling
-nextelementsibling
-previoussibling
-previouselementsibling
-createelement
-setAttribute
-createtesxtnode
-appendchild
- */
+var form = document.getElementById("addForm");
+var itemList = document.getElementById("items");
+var filter = document.getElementById("filter");
 
-const container = document.getElementById("main");
+// Form submit event
+form.addEventListener("submit", addItem);
+// Delete event
+itemList.addEventListener("click", removeOrEditItem);
+// Filter event
+filter.addEventListener("keyup", filterItems);
 
-container.parentElement.style.backgroundColor = "green";
+// Add item
+function addItem(e) {
+  e.preventDefault();
 
-// console.log(container.lastElementChild);
-container.lastElementChild.style.fontWeight = "bold";
+  // Get input value
+  var newItem = document.getElementById("item").value;
 
-const listGroup = document.querySelector(".list-group");
+  // Create new li element
+  var li = document.createElement("li");
+  // Add class
+  li.className = "list-group-item";
+  // Add text node with input value
+  li.appendChild(document.createTextNode(newItem));
 
-console.log(listGroup.lastChild);
+  // Create del button element
+  var deleteBtn = document.createElement("button");
 
-listGroup.firstElementChild.style.backgroundColor = "yellow";
+  // Add classes to del button
+  deleteBtn.className = "btn btn-danger btn-sm float-right delete";
 
-console.log(listGroup.firstChild);
+  // Append text node
+  deleteBtn.appendChild(document.createTextNode("X"));
 
-const listItems = document.querySelectorAll("li");
+  const editBtn = document.createElement("button");
+  editBtn.textContent = "Edit";
+  editBtn.className = "btn btn-info btn-sm float-right ml-3 edit";
+  // Append button to li
 
-const item2 = listItems[1];
+  li.appendChild(editBtn);
+  li.appendChild(deleteBtn);
 
-item2.nextElementSibling.textContent = "Changed third item";
+  // Append li to list
+  itemList.appendChild(li);
+}
 
-item2.nextSibling.textContent = "whitespace sibling";
+// Remove item
+function removeOrEditItem(e) {
+  if (e.target.classList.contains("delete")) {
+    if (confirm("Are You Sure?")) {
+      var li = e.target.parentElement;
+      itemList.removeChild(li);
+    }
+  } else if (e.target.classList.contains("edit")) {
+    const newVal = prompt("Enter new value: ");
+    e.target.parentElement.firstChild.textContent = newVal;
+  }
+}
 
-item2.previousElementSibling.textContent = "Changed first item";
-
-item2.previousSibling.textContent = "whitespace sibling prev";
-
-const newLi = document.createElement("li");
-newLi.textContent = "newly added item";
-newLi.setAttribute("style", "color: blue");
-
-listGroup.appendChild(newLi);
-
-document.getElementById("header-title").previousSibling.textContent = "HEllo";
-
-listItems[0].previousSibling.textContent = "HEllo";
-//
+// Filter Items
+function filterItems(e) {
+  // convert text to lowercase
+  var text = e.target.value.toLowerCase();
+  // Get lis
+  var items = itemList.getElementsByTagName("li");
+  // Convert to an array
+  Array.from(items).forEach(function (item) {
+    var itemName = item.firstChild.textContent;
+    if (itemName.toLowerCase().indexOf(text) != -1) {
+      item.style.display = "block";
+    } else {
+      item.style.display = "none";
+    }
+  });
+}
