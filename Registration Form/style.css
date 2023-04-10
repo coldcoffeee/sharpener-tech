@@ -104,3 +104,48 @@ button {
   border-radius: 5px;
   padding: 5px 0;
 }
+
+.records {
+  margin-left: 5%;
+  background-color: rgba(250, 235, 215, 0.785);
+  border-radius: 10px;
+  width: 40%;
+  height: 60vh;
+  display: flex;
+  align-items: start;
+  padding: 5%;
+  position: relative;
+}
+
+table::before {
+  content: "Records";
+  position: absolute;
+  font-size: 2rem;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+table {
+  border: 1px solid black;
+  width: 100%;
+}
+
+td {
+  /* border: 1px solid black; */
+  border-right: 1px solid black;
+  text-align: center;
+}
+
+td:last-of-type {
+  border: none;
+}
+
+.btn-del {
+  font-size: 0.8rem;
+  transform: translate(-75%, 7%);
+  position: relative;
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+}
