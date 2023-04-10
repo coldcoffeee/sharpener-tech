@@ -9,5 +9,7 @@ const logData = function () {
     date: document.getElementById("date").valueAsDate,
     time: document.getElementById("time").value,
   };
-  console.log(details);
+
+  localStorage.setItem(details.phone, JSON.stringify(details));
+  console.log(localStorage.getItem(details.phone));
 };
