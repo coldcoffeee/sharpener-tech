@@ -24,6 +24,7 @@ function editExpense() {
   const entries = this.parentNode.firstElementChild.textContent.split(" ");
   [priceField.value, descriptionField.value, categoryField.value] = entries;
   document.getElementById("edit").disabled = false;
+  document.getElementById("add").disabled = true;
 }
 
 document.getElementById("edit").addEventListener("click", (e) => {
@@ -44,7 +45,10 @@ function edit() {
   curr = -1;
   currItm = null;
   this.disabled = true;
-  return false;
+  priceField.value = "";
+  descriptionField.value = "";
+  categoryField.value = "";
+  document.getElementById("add").disabled = false;
 }
 
 function generateExpense({ id, price, description, category }) {
@@ -88,6 +92,9 @@ document.getElementById("add").addEventListener("click", (e) => {
   listGroup.appendChild(generateExpense(expense));
   localStorage.setItem(expense.id, JSON.stringify(expense));
   localStorage.setItem("id", ID);
+  priceField.value = "";
+  descriptionField.value = "";
+  categoryField.value = "";
 });
 
 window.onload = () => {
