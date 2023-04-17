@@ -77,15 +77,18 @@ document.getElementById("add").addEventListener("click", async (event) => {
       description: descriptionField.value,
       price: priceField.value,
       quantity: quantityField.value,
-      id: 13,
     };
 
     const response = await axios.post(URL, entry);
 
     entry.id = response.data._id;
 
-    table.lastElementChild.appendChild(generateRow(entry));
+    table.children[1].appendChild(generateRow(entry));
     addListeners();
+    nameField.value = "";
+    descriptionField.value = "";
+    priceField.value = "";
+    quantityField.value = "";
   } catch (err) {
     console.log("Error while adding: " + err);
   }
@@ -155,7 +158,7 @@ window.onload = async () => {
   response.data.forEach((record) => {
     record.id = record._id;
     console.log(record);
-    table.children[0].appendChild(generateRow(record));
+    table.children[1].appendChild(generateRow(record));
   });
   addListeners();
 };
