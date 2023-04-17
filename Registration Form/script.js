@@ -1,121 +1,167 @@
-const date = new Date();
-document.getElementById("date").valueAsDate = date;
-let rowToBeDel = null,
-  keyToBeDel = -1;
+const URL = "https://crudcrud.com/api/bc55c7a946514261b1689c6e054b382f/demo/";
+
+const records = [];
+const fields = ["id", "name", "email", "phone", "date", "time"];
+const nameField = document.getElementById("name");
+const mailField = document.getElementById("mail");
+const phoneField = document.getElementById("phone");
+const dateField = document.getElementById("date");
+const timeField = document.getElementById("time");
+
 const table = document.querySelector("table");
 
-const generateRow = function ({ name, mail, phone, date, time }) {
-  const newRow = document.createElement("tr");
+/*-UPON LOADING-*/
 
-  const tdName = document.createElement("td");
-  tdName.textContent = name;
-  newRow.appendChild(tdName);
+window.onload = async () => {
+  const res = await axios.get(URL);
+  for (const record of res.data) table.appendChild(generateRow(record));
+};
 
-  const tdMail = document.createElement("td");
-  tdMail.textContent = mail;
-  newRow.appendChild(tdMail);
+/* ------------ */
 
-  const tdPhone = document.createElement("td");
-  tdPhone.textContent = phone;
-  newRow.appendChild(tdPhone);
+function generateRow({ _id: id, name, mail, phone, date, time }) {
+  const row = document.createElement("tr");
 
-  const tdTiming = document.createElement("td");
+  const idCell = document.createElement("td");
+  idCell.style.display = "none";
+  idCell.textContent = id;
+  row.appendChild(idCell);
 
-  tdTiming.textContent = date + " @ " + time;
-  newRow.appendChild(tdTiming);
+  const nameCell = document.createElement("td");
+  nameCell.textContent = name;
+  row.appendChild(nameCell);
 
-  const tdButton = document.createElement("td");
+  const mailCell = document.createElement("td");
+  mailCell.textContent = mail;
+  row.appendChild(mailCell);
+
+  const phoneCell = document.createElement("td");
+  phoneCell.textContent = phone;
+  row.appendChild(phoneCell);
+
+  const timingCell = document.createElement("td");
+  timingCell.textContent = date + " @ " + time + ":00";
+  row.appendChild(timingCell);
+
+  const btnCell = document.createElement("td");
+
   const btnDelete = document.createElement("button");
   btnDelete.classList.add("btn-del");
-  btnDelete.onclick = delRow;
   btnDelete.textContent = "X";
-  tdButton.appendChild(btnDelete);
-  newRow.appendChild(tdButton);
-
-  const tdEdit = document.createElement("td");
+  btnDelete.onclick = delRow;
+  btnCell.appendChild(btnDelete);
   const btnEdit = document.createElement("button");
   btnEdit.classList.add("btn-edit");
-  btnEdit.onclick = edit;
   btnEdit.textContent = "Edit";
-  tdButton.appendChild(btnEdit);
+  btnEdit.onclick = edit;
+  btnCell.appendChild(btnEdit);
 
-  newRow.appendChild(tdButton);
-  return newRow;
-};
+  row.appendChild(btnCell);
 
-function delRow() {
-  localStorage.removeItem(
-    parseInt(this.parentElement.parentElement.children[2].textContent)
-  );
-  this.parentElement.parentElement.remove();
+  return row;
 }
 
-const logData = function () {
-  const details = {
-    name: document.getElementById("name").value,
-    mail: document.getElementById("mail").value,
-    phone: document.getElementById("phone").value,
-    date: document
-      .getElementById("date")
-      .valueAsDate.toISOString()
-      .split("T")[0],
-    time: document.getElementById("time").value,
+function register() {
+  const record = {
+    name: nameField.value,
+    mail: mailField.value,
+    phone: phoneField.value,
+    date: dateField.value,
+    time: timeField.value,
   };
+  postData(record)
+    .then((res) => {
+      record.id = res.data._id;
+    })
+    .catch((err) => console.log(err));
+  nameField.value = "";
+  mailField.value = "";
+  phoneField.value = "";
+  dateField.value = "";
+  timeField.value = "";
+}
 
-  localStorage.setItem(details.phone, JSON.stringify(details));
-  table.appendChild(generateRow(details));
-};
-window.onload = () => {
-  for (let i = 0; i < localStorage.length; i++) {
-    table.appendChild(
-      generateRow(JSON.parse(localStorage.getItem(localStorage.key(i))))
-    );
+async function postData(record) {
+  try {
+    const response = await axios.post(URL, record);
+    console.log(response);
+    record.id = response.data._id;
+    table.appendChild(generateRow(record));
+    return response;
+  } catch (err) {
+    console.log(err);
   }
-};
+}
+
+async function delRow() {
+  try {
+    const row = this.parentNode.parentNode;
+    const response = await axios.delete(
+      URL + row.firstElementChild.textContent
+    );
+    row.remove();
+  } catch (err) {
+    console.log("Error\n\n\n" + err);
+  }
+}
 
 function edit() {
-  const row = this.parentElement.parentElement;
-  const name = row.children[0].textContent;
-  const mail = row.children[1].textContent;
-  const phone = parseInt(row.children[2].textContent);
-  const date = row.children[3].textContent;
-  const time = row.children[4].textContent;
+  try {
+    document.getElementById("register").disabled = true;
+    document.getElementById("update").disabled = false;
 
-  document.getElementById("date").value = date.split(" ")[0];
-  document.getElementById("name").value = name;
-  document.getElementById("mail").value = mail;
-  document.getElementById("phone").value = phone;
-  document.getElementById("time").value = date.split(" ")[2];
+    const children = this.parentNode.parentNode.childNodes;
+    const id = this.parentNode.parentNode.firstElementChild.textContent;
+    nameField.value = children[1].textContent;
+    mailField.value = children[2].textContent;
+    phoneField.value = children[3].textContent;
+    dateField.value = children[4].textContent.split(" ")[0];
+    timeField.value = children[4].textContent.split(" ")[2].split(":")[0];
 
-  document.getElementById("update").disabled = false;
-
-  keyToBeDel = phone;
-  rowToBeDel = row;
+    async function update() {
+      try {
+        const record = {
+          name: nameField.value,
+          mail: mailField.value,
+          phone: phoneField.value,
+          date: dateField.value,
+          time: timeField.value,
+        };
+        const response = await axios.put(URL + id, record);
+        children[0].textContent = record._id;
+        children[1].textContent = record.name;
+        children[2].textContent = record.mail;
+        children[3].textContent = record.phone;
+        children[4].textContent = record.date + " @ " + record.time + ":00";
+        nameField.value = "";
+        mailField.value = "";
+        phoneField.value = "";
+        dateField.value = "";
+        timeField.value = "";
+        document.getElementById("register").disabled = false;
+        document.getElementById("update").disabled = true;
+      } catch (err) {
+        console.log("Error\n\n\n" + err);
+      }
+    }
+    document.getElementById("update").onclick = update;
+    // document.getElementById("update").removeEventListener("click", () => {});
+  } catch (err) {
+    console.log("Error\n\n\n" + err);
+  }
 }
 
-function update() {
-  console.log(rowToBeDel);
-  rowToBeDel.remove();
-  localStorage.removeItem(keyToBeDel);
-  const details = {
-    name: document.getElementById("name").value,
-    mail: document.getElementById("mail").value,
-    phone: document.getElementById("phone").value,
-    date: document
-      .getElementById("date")
-      .valueAsDate.toISOString()
-      .split("T")[0],
-    time: document.getElementById("time").value,
-  };
+axios.interceptors.request.use(
+  (config) => {
+    console.log(
+      `${config.method.toUpperCase()} request sent to ${
+        config.url
+      } at ${new Date().getTime()}`
+    );
 
-  localStorage.setItem(details.phone, JSON.stringify(details));
-  table.appendChild(generateRow(details));
-  rowToBeDel = null;
-  keyToBeDel = -1;
-  document.getElementById("update").disabled = true;
-  document.getElementById("name").value = "";
-  document.getElementById("mail").value = "";
-  document.getElementById("phone").value = "";
-  document.getElementById("date").value = "";
-  document.getElementById("time").value = "9";
-}
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

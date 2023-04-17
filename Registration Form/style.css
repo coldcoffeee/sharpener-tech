@@ -10,7 +10,7 @@ body {
   align-items: center;
   height: 100vh;
   width: 100%;
-  background: linear-gradient(-45deg, blue, purple);
+  background: linear-gradient(-45deg, rgb(99, 136, 99), rgb(76, 102, 24));
 }
 
 .container {
