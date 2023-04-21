@@ -6,7 +6,7 @@ const quantityField = document.getElementById("quantity");
 const table = document.querySelector("table");
 
 const URL =
-  "https://crudcrud.com/api/5b38c4a6134d410b8f79a242fda2e280/inventory/";
+  "https://crudcrud.com/api/12dda8911083448b9b3e5e7249a11266/inventory/";
 
 function generateRow({ name, description, price, quantity, id }) {
   const tr = document.createElement("tr");
