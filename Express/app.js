@@ -9,6 +9,10 @@ const contactUsRoutes = require("./routes/contactus");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
+// this makes "./public/" a public directory accessible by client, basically for client,
+// the public dir will behave as root dir, so html pages can access public's content's through
+//  relative paths
+app.use(express.static(path.join(__dirname, "public")));
 
 // "/admin/*"
 app.use("/admin", adminRoutes);
