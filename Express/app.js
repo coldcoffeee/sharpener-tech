@@ -29,9 +29,7 @@ app.use(shopRoutes);
 //catch all route
 // app.use((_, res) => res.status(404).send("<h1>Error! Page Not Found</h1>"));
 
-app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "views", "404.html"));
-});
+app.use(require("./controllers/404").get404);
 
 app.listen(4000);
 //fuser 4000/tcp -k
