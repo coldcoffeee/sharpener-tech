@@ -34,5 +34,6 @@ app.use((req, res, next) => {
 });
 
 app.listen(4000);
+//fuser 4000/tcp -k
 
 //
