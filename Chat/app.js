@@ -14,6 +14,7 @@ app.post("/", (req, res, next) => {
     chats += req.body.user + ": " + req.body.message + "<br>";
     fs.writeFileSync("./chat.txt", chats);
     return res.redirect("/");
+    // page reload karne pe previous method se call hota hai page with previous form data
   } else {
     console.log(req.body);
   }

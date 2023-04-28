@@ -4,6 +4,7 @@ const path = require("path");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const contactUsRoutes = require("./routes/contactus");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // "/admin/*"
 app.use("/admin", adminRoutes);
+app.use(contactUsRoutes);
 app.use(shopRoutes);
 
 //sequence of above two routes can be interchanged and the output will be unaffected
