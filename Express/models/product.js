@@ -16,11 +16,10 @@ module.exports = class Product {
       prod.push(this);
       console.log("Here: ", prod);
       fs.writeFileSync(file, JSON.stringify(prod));
-      above three lines won't work if
-      written outside readFile block
-      cuz readFile is an async method
+      //   above three lines won't work if
+      //   written outside readFile block
+      //   cuz readFile is an async method
     });
-   
   }
 
   static fetchAll() {
