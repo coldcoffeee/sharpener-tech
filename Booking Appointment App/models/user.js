@@ -1,29 +1,28 @@
 const Sequelize = require("sequelize");
+const db = require("../util/db");
 
-const sequelize = require("../util/database");
-
-//create models that will be manages by sequelize
-
-const Product = sequelize.define("product", {
+const User = db.define("users", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
+    unique: true,
   },
-  title: Sequelize.STRING,
-  price: {
-    type: Sequelize.DOUBLE,
-    allowNull: false,
-  },
-  imageUrl: {
+  name: {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  description: {
+  email: {
     type: Sequelize.STRING,
     allowNull: false,
+    unique: true,
+  },
+  phone: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    unique: true,
   },
 });
 
-module.exports = Product;
+module.exports = User;
