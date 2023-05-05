@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+      integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/4.5.6/css/ionicons-core.min.css"
+      integrity="sha512-OmevVDECSDeo7M4G+Nvh0+VLVGS2XnEOkXWJcJ0TRom3GpGgc/ryQIgpRZw20mb5eR2U0sqsm33MaR8yD1zdsQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>To-Do List</title>
+  </head>
+  <style>
+    ion-icon {
+      transform: translate(0, 15%);
+    }
+  </style>
+  <body class="bg-dark text-white">
+    <nav class="navbar navbar-expand border-bottom">
+      <h1 class="mx-5 my-3">
+        <ion-icon name="checkmark-done"></ion-icon>To Do List
+      </h1>
+    </nav>
+    <header
+      class="d-flex flex-column align-items-center justify-content-center my-3"
+    >
+      <div>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          placeholder="Name of the task"
+          class="form-control input-lg my-2"
+        />
+        <input
+          type="text"
+          name="description"
+          id="description"
+          placeholder="Description"
+          class="form-control input-lg"
+        />
+      </div>
+      <button
+        class="btn text-white my-3 bg-primary"
+        id="submit"
+        onclick="addTask()"
+      >
+        <ion-icon name="add-circle"></ion-icon> Add Task
+      </button>
+    </header>
+    <main class="d-flex align-items-baseline">
+      <div
+        class="w-100 flex-column d-flex justify-content-center align-items-center"
+      >
+        <h3>Pending &nbsp; <ion-icon name="alert-circle"></ion-icon></h3>
+        <br />
+        <ul class="w-50 list-group list-group-flush bg-dark list-pending">
+          <!-- <li
+            class="list-group-item list-group-item-action list-group-item-dark d-flex justify-content-around align-items-baseline"
+          >
+            Task Description
+            <button class="btn btn-success">Mark as complete</button>
+            <button class="btn btn-danger">Delete</button>
+          </li>
+          <li
+            class="list-group-item list-group-item-action list-group-item-dark d-flex justify-content-around align-items-baseline"
+          >
+            <div>Task Description</div>
+            <button class="btn btn-success">Mark as complete</button>
+            <button class="btn btn-danger">Delete</button>
+          </li> -->
+        </ul>
+      </div>
+      <div
+        class="w-75 d-flex flex-column justify-content-center align-items-center"
+      >
+        <h3>Completed &nbsp; <ion-icon name="checkmark-circle"></ion-icon></h3>
+        <br />
+        <ul class="w-50 list-group list-group-flush bg-dark list-completed">
+          <!-- <li
+            class="list-group-item list-group-item-action list-group-item-dark d-flex justify-content-around align-items-baseline"
+          >
+            Task Description
+            <button class="btn opacity-0">O</button>
+          </li>
+          <li
+            class="list-group-item list-group-item-action list-group-item-dark d-flex justify-content-around align-items-baseline"
+          >
+            Task Description
+            <button class="btn opacity-0">O</button>
+          </li> -->
+        </ul>
+      </div>
+    </main>
+    <script src="./index.js"></script>
+  </body>
+</html>
