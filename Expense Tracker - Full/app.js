@@ -4,7 +4,7 @@ const bp = require("body-parser");
 const db = require("./utils/database");
 const expenseRoutes = require("./routes/.expenseRoutes");
 const signupRoutes = require("./routes/signupRoutes");
-const loginRoutes = require("./routes/.loginRoutes");
+const loginRoutes = require("./routes/loginRoutes");
 
 const app = express();
 
