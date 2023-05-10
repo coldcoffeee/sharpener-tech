@@ -1,9 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const bp = require("body-parser");
-const db = require("./utils/.database");
+const db = require("./utils/database");
 const expenseRoutes = require("./routes/.expenseRoutes");
-const signupRoutes = require("./routes/.signupRoutes");
+const signupRoutes = require("./routes/signupRoutes");
 const loginRoutes = require("./routes/.loginRoutes");
 
 const app = express();
