@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bp = require("body-parser");
 const db = require("./utils/database");
-// const expenseRoutes = require("./routes/.expenseRoutes");
+const expenseRoutes = require("./routes/expenseRoutes");
 const signupRoutes = require("./routes/signupRoutes");
 const loginRoutes = require("./routes/loginRoutes");
 
@@ -14,7 +14,7 @@ const app = express();
     app.use(cors());
     app.use(bp.json());
 
-    // app.use("/expenses", expenseRoutes);
+    app.use("/expense", expenseRoutes);
     app.use("/signup", signupRoutes);
     app.use("/login", loginRoutes);
 

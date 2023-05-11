@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
     if (!user) res.status(500).json({ message: "Invalid email or password!" });
     else {
       const status = await compare(password + "", user.password);
-      if (status) res.status(201).json({ message: "Logged in successfully!" });
+      if (status) res.status(201).redirect("/expense");
       else res.status(500).json({ message: "Invalid email or password!" });
     }
   } catch (err) {
