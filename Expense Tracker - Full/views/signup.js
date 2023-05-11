@@ -9,9 +9,9 @@ document.signupForm.onsubmit = async (event) => {
     };
     const response = await axios.post("http://localhost:8080/signup", details);
     if (response.status === 201) window.alert("Sign Up successful!");
-    else window.alert(response.data.message);
+    else throw new Error(response.data.message);
   } catch (err) {
-    console.log(err);
+    window.alert(err.response.data.message);
   }
   document.signupForm.reset();
 };

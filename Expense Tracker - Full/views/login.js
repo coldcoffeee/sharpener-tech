@@ -3,12 +3,13 @@ document.loginForm.onsubmit = async (event) => {
     event.preventDefault();
     const details = {
       email: document.getElementById("email").value,
-      password: document.getElementById("password").value,
+      password: document.getElementById("password"),
     };
     const response = await axios.post("http://localhost:8080/login", details);
-    console.log(response.data);
-    document.loginForm.reset();
+    if (response.status === 201) window.alert("Login successful!");
+    else throw new Error(response.data.message);
   } catch (err) {
-    console.log(err);
+    window.alert(err.response.data.message);
   }
+  document.loginForm.reset();
 };
