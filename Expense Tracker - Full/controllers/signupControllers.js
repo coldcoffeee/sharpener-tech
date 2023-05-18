@@ -1,5 +1,7 @@
 const { hash } = require("bcrypt");
 //next time use hashSync and compareSync
+const root = require("../utils/root");
+const path = require("path");
 const User = require("../models/user");
 
 exports.registerUser = async (req, res, next) => {
@@ -22,9 +24,16 @@ exports.registerUser = async (req, res, next) => {
         email,
         password: hashedPW,
       });
-      res.status(201).json({ message: "User registered successfully!" });
+      res
+        .status(201)
+        .json({ message: "User registered successfully!", redirect: "/login" });
     }
   } catch (err) {
     res.status(500).json({ message: "Couldn't register user!" });
   }
+};
+
+exports.signupPage = (req, res, next) => {
+  if (req.session.validated) res.redirect("/expense");
+  else res.sendFile(path.join(root, "views", "signup.html"));
 };

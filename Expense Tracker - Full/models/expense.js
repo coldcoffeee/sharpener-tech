@@ -1,14 +1,14 @@
 const Sequelize = require("sequelize");
 const database = require("../utils/database");
 
-const Expense = database.define("expenses", {
+const Expense = database.define("expense", {
   id: {
     type: Sequelize.INTEGER,
     unique: true,
     primaryKey: true,
     autoIncrement: true,
   },
-  price: {
+  amount: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },

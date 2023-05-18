@@ -1,14 +1,16 @@
 const Expense = require("../models/expense");
 const root = require("../utils/root");
 const { join } = require("path");
-//fuel food electricity movie
+
 exports.postExpense = async (req, res, next) => {
   try {
     const { amount, description, category } = req.body;
+    const user_id = req.session.user_id;
     const reply = await Expense.create({
-      price: amount,
-      description: description,
-      category: category,
+      amount,
+      description,
+      category,
+      userUserId: user_id,
     });
     res.status(201).json({ id: reply.id, message: "Entry saved!" });
   } catch (err) {
@@ -17,23 +19,21 @@ exports.postExpense = async (req, res, next) => {
 };
 
 exports.getExpensesPage = async (req, res, next) => {
-  // try {
-  //   const tuples = await Expense.findAll();
-  //   res.status(201).json({ success: true, entries: tuples });
-  // } catch (err) {
-  //   res
-  //     .status(400)
-  //     .json({ success: false, message: "Error occured while fetching data!" });
-  // }
-  console.log(`\n\n${root}\n\n`);
-  res.sendFile(root + "/views/expenses.html");
+  if (req.session.validated) res.sendFile(root + "/views/expenses.html");
+  else {
+    res.redirect("/login");
+  }
 };
 
 exports.getExpenses = async (req, res, next) => {
   try {
-    const tuples = await Expense.findAll();
+    const userUserId = req.session.user_id;
+    const tuples = await Expense.findAll({
+      where: { userUserId },
+    });
     res.status(201).json({ success: true, entries: tuples });
   } catch (err) {
+    console.log(err);
     res
       .status(400)
       .json({ success: false, message: "Error occured while fetching data!" });
@@ -43,8 +43,9 @@ exports.getExpenses = async (req, res, next) => {
 exports.removeExpense = async (req, res, next) => {
   const id = req.params.id;
   console.log(req.params);
+  const userUserId = req.session.user_id;
   try {
-    const reply = await Expense.destroy({ where: { id: id } });
+    const reply = await Expense.destroy({ where: { id: id, userUserId } });
     res.status(201).json({ success: true, message: "Entry Deleted!" });
   } catch (err) {
     console.log(err);
@@ -54,13 +55,14 @@ exports.removeExpense = async (req, res, next) => {
 
 exports.updateExpenses = async (req, res, next) => {
   try {
-    const reply = await Expense.update(
+    const { id, amount, description, category } = req.body;
+    await Expense.update(
       {
-        price: parseInt(req.body.price),
-        description: req.body.description,
-        category: req.body.category,
+        amount,
+        description,
+        category,
       },
-      { where: { id: req.body.id } }
+      { where: { id } }
     );
     res.status(201).json({ message: "Entry updated!" });
   } catch (err) {
