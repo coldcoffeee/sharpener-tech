@@ -1,3 +1,4 @@
+const host = window.location.protocol + "//" + window.location.host;
 document.signupForm.onsubmit = async (event) => {
   event.preventDefault();
   try {
@@ -6,7 +7,7 @@ document.signupForm.onsubmit = async (event) => {
       email: document.getElementById("email").value,
       password: document.getElementById("password").value,
     };
-    const response = await axios.post("http://localhost:8080/signup", details);
+    const response = await axios.post(host + "/signup", details);
     if (response.status === 201) {
       window.alert("Sign Up successful!");
       window.location = response.data.redirect;
@@ -16,3 +17,5 @@ document.signupForm.onsubmit = async (event) => {
   }
   document.signupForm.reset();
 };
+
+document.getElementById("link").href = host + "/login";

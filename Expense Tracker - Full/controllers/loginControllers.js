@@ -23,6 +23,7 @@ exports.authorize = async (req, res, next) => {
       const status = await compare(password + "", user.password + "");
       if (status) {
         req.session.user_id = user.user_id;
+        req.session.user = user;
         req.session.validated = true;
         res
           .status(201)

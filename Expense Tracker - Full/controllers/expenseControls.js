@@ -19,8 +19,9 @@ exports.postExpense = async (req, res, next) => {
 };
 
 exports.getExpensesPage = async (req, res, next) => {
-  if (req.session.validated) res.sendFile(root + "/views/expenses.html");
-  else {
+  if (req.session.validated) {
+    res.sendFile(root + "/views/expenses.html");
+  } else {
     res.redirect("/login");
   }
 };

@@ -26,8 +26,8 @@
     <main
       class="my-5 text-white d-flex flex-column justify-content-around align-items-center"
     >
-      <div class="upper w-100 d-flex justify-content-around">
-        <div style="height: 36vh">
+      <div class="upper">
+        <div class="w-25" style="height: 36vh">
           <form name="expenseForm">
             <fieldset class="form-group border border-muted rounded p-3 w-100">
               <legend class="w-auto"><h2>New Expense</h2></legend>
@@ -99,7 +99,7 @@
                   <th scope="col">Remove</th>
                 </tr>
               </thead>
-              <tbody class="expenses-body">
+              <tbody>
                 <!-- <tr>
                   <td class="w-25">Mark</td>
                   <td class="w-25">Mark</td>
@@ -119,28 +119,8 @@
           </div>
         </div>
       </div>
-
-      <div
-        class="lower my-5 w-75 d-flex flex-column align-items-center border border-warning rounded"
-        id="lower"
-      >
-        <h3 class="pt-3">Leaderboards</h3>
-        <table class="table table-striped table-dark mt-3" style="width: 98%">
-          <thead>
-            <tr>
-              <th scope="col">Rank</th>
-              <th scope="col">Name</th>
-              <th scope="col">Total Expense</th>
-            </tr>
-          </thead>
-          <tbody class="leaderboards-body">
-            <!-- <tr>
-              <th scope="row" class="w-25">1</th>
-              <td class="w-50">Mark</td>
-              <td class="w-25">15000</td>
-            </tr> -->
-          </tbody>
-        </table>
+      <div class="leaderboards text-white">
+        <h3>Leaderboards</h3>
       </div>
     </main>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
