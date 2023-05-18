@@ -2,17 +2,24 @@ const Expense = require("../models/expense");
 const User = require("../models/user");
 const root = require("../utils/root");
 const { join } = require("path");
+const sequelize = require("../utils/database");
 
 exports.postExpense = async (req, res, next) => {
+  const txn = await sequelize.transaction();
   try {
     const { amount, description, category } = req.body;
     const user_id = req.session.user_id;
-    const reply = await Expense.create({
-      amount,
-      description,
-      category,
-      userUserId: user_id,
-    });
+    const reply = await Expense.create(
+      {
+        amount,
+        description,
+        category,
+        userUserId: user_id,
+      },
+      {
+        transaction: txn,
+      }
+    );
     const user = await User.findByPk(user_id);
     await User.update(
       {
@@ -22,10 +29,13 @@ exports.postExpense = async (req, res, next) => {
         where: {
           user_id,
         },
+        transaction: txn,
       }
     );
+    await txn.commit();
     res.status(201).json({ id: reply.id, message: "Entry saved!" });
   } catch (err) {
+    await txn.rollback();
     res.status(400).json({ success: false, message: "Couldn't save data!" });
   }
 };
@@ -57,6 +67,7 @@ exports.removeExpense = async (req, res, next) => {
   const id = req.params.id;
   console.log(req.params);
   const userUserId = req.session.user_id;
+  const txn = await sequelize.transaction();
   try {
     const expense = await Expense.findByPk(id);
 
@@ -72,10 +83,16 @@ exports.removeExpense = async (req, res, next) => {
       }
     );
 
-    const reply = await Expense.destroy({ where: { id: id, userUserId } });
+    const reply = await Expense.destroy({
+      where: { id: id, userUserId },
+      transaction: txn,
+    });
+
+    await txn.commit();
 
     res.status(201).json({ success: true, message: "Entry Deleted!" });
   } catch (err) {
+    await txn.destroy();
     console.log(err);
     res.status(400).json({ success: false, message: "Couldn't delete!" });
   }
