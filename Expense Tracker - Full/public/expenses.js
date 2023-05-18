@@ -18,10 +18,12 @@ async function updateLeaderboards() {
     //   };
     //   appendToLeaderboards(entry);
     // }
+    console.log(res.data);
     for (let i = 1; i <= res.data.result.length; i++) {
+      if (res.data.result[i - 1].totalExpense === 0) continue;
       const obj = {
         rank: i,
-        name: res.data.result[i - 1]["user.name"],
+        name: res.data.result[i - 1]["name"],
         totalExpenses: res.data.result[i - 1].totalExpense,
       };
       appendToLeaderboards(obj);
@@ -98,6 +100,7 @@ async function deleteExpense() {
     if (res.status === 201) {
       this.parentElement.parentElement.remove();
       window.alert(res.data.message);
+      await updateLeaderboards();
     } else throw new Error(req.data.message);
   } catch (err) {
     window.alert(err);

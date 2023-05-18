@@ -4,19 +4,24 @@ const sequelize = require("sequelize");
 
 exports.getLeaderboards = async (req, res) => {
   try {
-    const result = await Expense.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ["name"],
-          required: true,
-        },
-      ],
-      attributes: [
-        [sequelize.fn("sum", sequelize.col("amount")), "totalExpense"],
-      ],
-      raw: true,
-      group: ["expense.userUserId"],
+    // const result = await Expense.findAll({
+    //   include: [
+    //     {
+    //       model: User,
+    //       attributes: ["name"],
+    //       required: true,
+    //     },
+    //   ],
+    //   attributes: [
+    //     [sequelize.fn("sum", sequelize.col("amount")), "totalExpense"],
+    //   ],
+    //   raw: true,
+    //   group: ["expense.userUserId"],
+    //   order: sequelize.literal("totalExpense DESC"),
+    // });
+
+    const result = await User.findAll({
+      attributes: ["name", "totalExpense"],
       order: sequelize.literal("totalExpense DESC"),
     });
 

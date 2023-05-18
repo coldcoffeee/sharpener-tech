@@ -1,4 +1,5 @@
 const Expense = require("../models/expense");
+const User = require("../models/user");
 const root = require("../utils/root");
 const { join } = require("path");
 
@@ -12,6 +13,17 @@ exports.postExpense = async (req, res, next) => {
       category,
       userUserId: user_id,
     });
+    const user = await User.findByPk(user_id);
+    await User.update(
+      {
+        totalExpense: parseInt(user.totalExpense) + parseInt(amount),
+      },
+      {
+        where: {
+          user_id,
+        },
+      }
+    );
     res.status(201).json({ id: reply.id, message: "Entry saved!" });
   } catch (err) {
     res.status(400).json({ success: false, message: "Couldn't save data!" });
@@ -46,7 +58,22 @@ exports.removeExpense = async (req, res, next) => {
   console.log(req.params);
   const userUserId = req.session.user_id;
   try {
+    const expense = await Expense.findByPk(id);
+
+    const user = await User.findByPk(userUserId);
+    await User.update(
+      {
+        totalExpense: user.totalExpense - expense.amount,
+      },
+      {
+        where: {
+          user_id: userUserId,
+        },
+      }
+    );
+
     const reply = await Expense.destroy({ where: { id: id, userUserId } });
+
     res.status(201).json({ success: true, message: "Entry Deleted!" });
   } catch (err) {
     console.log(err);
