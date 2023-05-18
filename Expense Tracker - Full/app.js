@@ -38,6 +38,7 @@ const signupRoutes = require("./routes/signupRoutes");
 const loginRoutes = require("./routes/loginRoutes");
 const premiumRoutes = require("./routes/premiumRoutes");
 const leaderboardRoutes = require("./routes/leaderboardRoutes");
+const passwordRoutes = require("./routes/passwordRoutes");
 
 (async () => {
   // await db.sync({ force: true });
@@ -50,6 +51,7 @@ const leaderboardRoutes = require("./routes/leaderboardRoutes");
   app.use("/login", loginRoutes);
   app.use("/premium", premiumRoutes);
   app.use("/leaderboards", leaderboardRoutes);
+  app.use("/password", passwordRoutes);
   app.listen(8080, () => {
     console.log("Server running on port 8080");
   });
