@@ -11,7 +11,7 @@
       crossorigin="anonymous"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
-    <title>Sign In | Expense Tracker</title>
+    <title>Reset Password | Expense Tracker</title>
   </head>
   <body class="bg-dark">
     <header class="navbar navbar-expand-lg bg-secondary border-bottom">
@@ -19,42 +19,39 @@
     </header>
     <main class="my-5 text-white d-flex justify-content-around">
       <div class="w-25">
-        <form name="loginForm">
+        <form name="resetForm">
           <fieldset class="form-group border border-muted rounded p-3 w-100">
-            <legend class="w-auto"><h2>Log In Details</h2></legend>
-
-            <div class="text-dark form-floating mb-3">
-              <input
-                type="email"
-                class="form-control"
-                id="email"
-                placeholder="ema@example.com"
-                required
-              />
-              <label for="email">Email address</label>
-            </div>
+            <legend class="w-auto"><h2>Reset Password</h2></legend>
 
             <div class="text-dark form-floating mb-3">
               <input
                 type="password"
                 class="form-control"
                 id="password"
-                placeholder=" "
+                placeholder="ema@example.com"
                 required
               />
-              <label for="email">Password</label>
+              <label for="password">Enter new password</label>
             </div>
 
-            <button class="btn btn-lg btn-primary my-2" id="submit">
-              Sign In
+            <div class="text-dark form-floating mb-3">
+              <input
+                type="password"
+                class="form-control"
+                id="confirmpassword"
+                placeholder="ema@example.com"
+                required
+              />
+              <label for="confirmpassword">Confirm new password</label>
+            </div>
+
+            <button class="btn btn-lg btn-danger my-2" id="submit">
+              Change Password
             </button>
-            <br />
-            Need an account?
-            <a href="" id="link">Signup</a>
           </fieldset>
         </form>
       </div>
     </main>
-    <script src="./login.js"></script>
+    <script src="../../reset.js"></script>
   </body>
 </html>

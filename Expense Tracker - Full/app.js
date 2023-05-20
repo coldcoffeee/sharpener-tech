@@ -3,14 +3,19 @@ const cors = require("cors");
 const bp = require("body-parser");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
+const root = require("./utils/root");
+const path = require("path");
 
 const User = require("./models/user");
 const Expense = require("./models/expense");
 const Order = require("./models/order");
+const ForgotPasswordRequest = require("./models/passwordrequest");
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
 User.hasMany(Order);
+User.hasMany(ForgotPasswordRequest, { foreignKey: "userId" });
+ForgotPasswordRequest.belongsTo(User, { foreignKey: "userId" });
 
 const app = express();
 
@@ -52,6 +57,9 @@ const passwordRoutes = require("./routes/passwordRoutes");
   app.use("/premium", premiumRoutes);
   app.use("/leaderboards", leaderboardRoutes);
   app.use("/password", passwordRoutes);
+  app.use((req, res) => {
+    res.sendFile(path.join(root, "views", "404.html"));
+  });
   app.listen(8080, () => {
     console.log("Server running on port 8080");
   });
