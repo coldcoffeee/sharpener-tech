@@ -4,6 +4,7 @@ const descriptionField = document.getElementById("description");
 const categoryField = document.getElementById("category");
 const amountField = document.getElementById("amount");
 const host = window.location.protocol + "//" + window.location.host;
+const overlay = document.getElementById("loading");
 
 async function updateLeaderboards() {
   try {
@@ -30,7 +31,7 @@ async function updateLeaderboards() {
     }
     // console.log(res.data.result[0]);
   } catch (err) {
-    window.alert(err);
+    //window.alert(err);
   }
 }
 
@@ -94,16 +95,19 @@ function appendExpense({ id, amount, description, category }) {
 
 async function deleteExpense() {
   try {
+    overlay.style.display = "block";
     const id = this.parentElement.parentElement.firstElementChild.textContent;
     const res = await axios.delete(host + "/expense/" + id);
     console.log(res);
     if (res.status === 201) {
       this.parentElement.parentElement.remove();
-      window.alert(res.data.message);
       await updateLeaderboards();
+      overlay.style.display = "none";
+      //window.alert(res.data.message);
     } else throw new Error(req.data.message);
   } catch (err) {
-    window.alert(err);
+    overlay.style.display = "none";
+    //window.alert(err);
   }
 }
 
@@ -120,11 +124,14 @@ window.onload = async () => {
       document.querySelector("h1").textContent += "+";
       await updateLeaderboards();
     } else {
+      document.getElementById("download").style.display = "none";
       document.querySelector(".lower").setAttribute("class", "d-none");
     }
+    overlay.style.display = "none";
   } catch (err) {
     console.log(err);
-    window.alert(err);
+    overlay.style.display = "none";
+    //window.alert(err);
   }
 };
 
@@ -135,6 +142,7 @@ async function postExpense() {
     category: categoryField.value,
   };
   try {
+    overlay.style.display = "block";
     const res = await axios.post(host + "/expense", expense);
     if (res.status === 201) {
       expense.id = res.data.id;
@@ -142,11 +150,13 @@ async function postExpense() {
       descriptionField.value = "";
       categoryField.value = "";
       amountField.value = "";
-      window.alert(res.data.message);
       await updateLeaderboards();
+      overlay.style.display = "none";
+      //window.alert(res.data.message);
     } else throw new Error("res.data.message");
   } catch (err) {
-    window.alert(err);
+    overlay.style.display = "none";
+    //window.alert(err);
   }
 }
 
@@ -181,10 +191,10 @@ async function postExpense() {
 //           descriptionField.value +
 //           " " +
 //           categoryField.value;
-//         window.alert(res.data.message);
+//         //window.alert(res.data.message);
 //       } else throw new Error(res.data.message);
 //     } catch (err) {
-//       window.alert(err);
+//       //window.alert(err);
 //     }
 
 //     priceField.value = "";
@@ -223,7 +233,7 @@ document.getElementById("btnPremium").onclick = async () => {
           payment_id: response.razorpay_payment_id,
         });
 
-        window.alert("You are a Premium User Now");
+        //window.alert("You are a Premium User Now");
         window.location.reload();
 
         // document.getElementById("btnPremium").style.display = "none";
@@ -242,6 +252,6 @@ document.getElementById("btnPremium").onclick = async () => {
       alert("Something went wrong");
     });
   } catch (err) {
-    window.alert(err);
+    //window.alert(err);
   }
 };
