@@ -255,3 +255,15 @@ document.getElementById("btnPremium").onclick = async () => {
     //window.alert(err);
   }
 };
+
+async function download() {
+  try {
+    overlay.style.display = "block";
+    const res = await axios.get(host + "/expense/download");
+    overlay.style.display = "none";
+    window.open(res.data.url, "_blank");
+  } catch (err) {
+    overlay.style.display = "none";
+    window.alert("Error");
+  }
+}

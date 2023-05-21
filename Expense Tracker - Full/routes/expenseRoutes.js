@@ -9,5 +9,6 @@ router.get("/all", authenticate, expenseController.getExpenses);
 router.post("/", authenticate, expenseController.postExpense);
 router.delete("/:id", authenticate, expenseController.removeExpense);
 router.put("/", authenticate, expenseController.updateExpenses);
+router.get("/download", authenticate, expenseController.download);
 
 module.exports = router;

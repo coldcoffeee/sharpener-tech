@@ -4,6 +4,8 @@ const root = require("../utils/root");
 const { join } = require("path");
 const sequelize = require("../utils/database");
 
+const upload = require("../utils/aws");
+
 exports.postExpense = async (req, res, next) => {
   const txn = await sequelize.transaction();
   try {
@@ -112,5 +114,22 @@ exports.updateExpenses = async (req, res, next) => {
     res.status(201).json({ message: "Entry updated!" });
   } catch (err) {
     res.status(400).json({ success: false, message: "Couldn't update!" });
+  }
+};
+
+exports.download = async (req, res) => {
+  try {
+    const user = await User.findByPk(req.session.user_id);
+    const records = await user.getExpenses({ raw: true });
+    const url = await upload(
+      `${req.session.user.name} ${new Date()}.json`,
+      JSON.stringify(records)
+    );
+    res.status(200).json({ url });
+  } catch (err) {
+    console.log(err);
+    res
+      .status(400)
+      .json({ success: false, message: "Couldn't generate file!" });
   }
 };
