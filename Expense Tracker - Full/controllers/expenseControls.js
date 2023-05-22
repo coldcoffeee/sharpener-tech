@@ -53,8 +53,14 @@ exports.getExpensesPage = async (req, res, next) => {
 exports.getExpenses = async (req, res, next) => {
   try {
     const userUserId = req.session.user_id;
+    const pageNo = req.params.pageNo;
+
+    const offset = (pageNo - 1) * 5;
+
     const tuples = await Expense.findAll({
       where: { userUserId },
+      limit: 5,
+      offset,
     });
     res.status(201).json({ success: true, entries: tuples });
   } catch (err) {

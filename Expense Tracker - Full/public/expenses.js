@@ -6,19 +6,45 @@ const amountField = document.getElementById("amount");
 const host = window.location.protocol + "//" + window.location.host;
 const overlay = document.getElementById("loading");
 
+let PAGE_NO = 1;
+let lastPage = false;
+
+async function getExpenses(nxt) {
+  try {
+    overlay.style.display = "block";
+    expensesBody.innerHTML = "";
+    if (nxt == 1 && !lastPage) {
+      PAGE_NO++;
+    } else if (nxt == -1 && PAGE_NO > 0) {
+      PAGE_NO--;
+    }
+    const {
+      data: { entries },
+    } = await axios.get(host + `/expense/all/${PAGE_NO}`);
+    if (entries.length < 5) lastPage = true;
+    else lastPage = false;
+    if (PAGE_NO == 0 || nxt == 0) {
+      document.getElementById("prev").style.display = "none";
+    } else {
+      document.getElementById("prev").style.display = "inline";
+    }
+    if (lastPage) {
+      document.getElementById("next").style.display = "none";
+    } else {
+      document.getElementById("next").style.display = "inline";
+    }
+    for (const obj of entries) appendExpense(obj);
+    overlay.style.display = "none";
+  } catch (err) {
+    console.error(err);
+    overlay.style.display = "none";
+  }
+}
+
 async function updateLeaderboards() {
   try {
     const res = await axios.get(host + "/leaderboards");
     leaderboardsBody.innerHTML = "";
-    // for (const entry of res.data.entry) {
-    //   console.log(entry);
-    //   const obj = {
-    //     rank: i++,
-    //     name: entry.user.name,
-    //     totalExpenses: entry.totalExpense,
-    //   };
-    //   appendToLeaderboards(entry);
-    // }
     console.log(res.data);
     for (let i = 1; i <= res.data.result.length; i++) {
       if (res.data.result[i - 1].totalExpense === 0) continue;
@@ -29,9 +55,8 @@ async function updateLeaderboards() {
       };
       appendToLeaderboards(obj);
     }
-    // console.log(res.data.result[0]);
   } catch (err) {
-    //window.alert(err);
+    console.error(err);
   }
 }
 
@@ -103,20 +128,15 @@ async function deleteExpense() {
       this.parentElement.parentElement.remove();
       await updateLeaderboards();
       overlay.style.display = "none";
-      //window.alert(res.data.message);
     } else throw new Error(req.data.message);
   } catch (err) {
     overlay.style.display = "none";
-    //window.alert(err);
   }
 }
 
 window.onload = async () => {
   try {
-    const {
-      data: { entries },
-    } = await axios.get(host + "/expense/all");
-    for (const obj of entries) appendExpense(obj);
+    await getExpenses(0);
 
     const res = await axios.get(host + "/premium");
     if (res.data.isPremiumUser) {
@@ -131,7 +151,6 @@ window.onload = async () => {
   } catch (err) {
     console.log(err);
     overlay.style.display = "none";
-    //window.alert(err);
   }
 };
 
@@ -160,65 +179,12 @@ async function postExpense() {
   }
 }
 
-// function edit() {
-//   console.log(this.parentElement.children);
-//   const [price_, description_, category_] =
-//     this.parentElement.children[0].textContent.split(" ");
-//   const id = this.parentElement.children[3].textContent;
-//   amountField.value = price_;
-//   descriptionField.value = description_;
-//   categoryField.value = category_;
-//   const addBtn = document.getElementById("add");
-//   const editBtn = document.getElementById("edit");
+async function next() {}
 
-//   addBtn.disabled = true;
-//   editBtn.disabled = false;
-
-//   editBtn.onclick = async () => {
-//     const newExpense = {
-//       id: id,
-//       price: priceField.value,
-//       description: descriptionField.value,
-//       category: categoryField.value,
-//     };
-
-//     try {
-//       const res = await axios.put("http://localhost:8080/", newExpense);
-//       if (res.status === 201) {
-//         this.parentElement.children[0].textContent =
-//           priceField.value +
-//           " " +
-//           descriptionField.value +
-//           " " +
-//           categoryField.value;
-//         //window.alert(res.data.message);
-//       } else throw new Error(res.data.message);
-//     } catch (err) {
-//       //window.alert(err);
-//     }
-
-//     priceField.value = "";
-//     descriptionField.value = "";update
-//     categoryField.value = "";
-
-//     editBtn.onclick = null;
-//     editBtn.disabled = true;
-//     addBtn.disabled = false;
-//   };
-// }
 document.expenseForm.onsubmit = async (event) => {
   event.preventDefault();
   postExpense();
 };
-
-// window.onload = async () => {
-//   const res = await axios.get(host + "/premium");
-//   console.log(res);
-//   if (res.data.isPremiumUser) {
-//     document.getElementById("btnPremium").style.display = "none";
-//     document.querySelector("h1").textContent += "+";
-//   }
-// };
 
 document.getElementById("btnPremium").onclick = async () => {
   try {
@@ -232,28 +198,16 @@ document.getElementById("btnPremium").onclick = async () => {
           order_id: options.order_id,
           payment_id: response.razorpay_payment_id,
         });
-
-        //window.alert("You are a Premium User Now");
         window.location.reload();
-
-        // document.getElementById("btnPremium").style.display = "none";
-        // document.getElementById("message").innerHTML =
-        //   "You are a premium user ";
-        // localStorage.setItem("token", res.data.token);
-        // showLeaderboard();
       },
     };
     const payment = new Razorpay(options);
     payment.open();
-    // e.preventDefault();
-
     payment.on("payment.failed", function (response) {
       console.log(response);
       alert("Something went wrong");
     });
-  } catch (err) {
-    //window.alert(err);
-  }
+  } catch (err) {}
 };
 
 async function download() {
