@@ -5,6 +5,8 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const root = require("./utils/root");
 const path = require("path");
+const fs = require("fs");
+const morgan = require("morgan");
 
 const User = require("./models/user");
 const Expense = require("./models/expense");
@@ -33,9 +35,16 @@ app.use(
     },
   })
 );
+// app.use(require("helmet")());
+// app.use(require("compression")());
 app.use(cookieParser());
 app.use(bp.json());
 app.use(express.static(__dirname + "/public"));
+
+const logStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
+  flags: "a",
+});
+app.use(morgan("combined", { stream: logStream }));
 
 const db = require("./utils/database");
 const expenseRoutes = require("./routes/expenseRoutes");
@@ -60,7 +69,7 @@ const passwordRoutes = require("./routes/passwordRoutes");
   app.use((req, res) => {
     res.sendFile(path.join(root, "views", "404.html"));
   });
-  app.listen(8080, () => {
-    console.log("Server running on port 8080");
+  app.listen(process.env.PORT || 8080, () => {
+    console.log(`Server running on port ${process.env.PORT || 8080}`);
   });
 })();
