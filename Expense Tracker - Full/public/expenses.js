@@ -23,17 +23,20 @@ async function getExpenses(nxt) {
     } = await axios.get(host + `/expense/all/${PAGE_NO}`);
     if (entries.length < 5) lastPage = true;
     else lastPage = false;
-    if (PAGE_NO == 0 || nxt == 0) {
-      document.getElementById("prev").style.display = "none";
+    if (PAGE_NO <= 1 || nxt == 0) {
+      document.getElementById("prev").disabled = true;
     } else {
-      document.getElementById("prev").style.display = "inline";
+      document.getElementById("prev").disabled = false;
     }
     if (lastPage) {
-      document.getElementById("next").style.display = "none";
+      document.getElementById("next").disabled = true;
     } else {
-      document.getElementById("next").style.display = "inline";
+      document.getElementById("next").disabled = false;
     }
     for (const obj of entries) appendExpense(obj);
+    document.getElementById("pageno").textContent = `${
+      lastPage ? "last" : PAGE_NO
+    }`;
     overlay.style.display = "none";
   } catch (err) {
     console.error(err);
