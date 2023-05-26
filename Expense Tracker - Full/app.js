@@ -35,8 +35,6 @@ app.use(
     },
   })
 );
-// app.use(require("helmet")());
-// app.use(require("compression")());
 app.use(cookieParser());
 app.use(bp.json());
 app.use(express.static(__dirname + "/public"));
@@ -54,6 +52,7 @@ const premiumRoutes = require("./routes/premiumRoutes");
 const leaderboardRoutes = require("./routes/leaderboardRoutes");
 const passwordRoutes = require("./routes/passwordRoutes");
 
+// process.env.NODE_ENV = "production";
 (async () => {
   // await db.sync({ force: true });
   await db.sync();
