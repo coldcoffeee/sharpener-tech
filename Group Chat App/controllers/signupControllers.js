@@ -12,6 +12,14 @@ exports.registerUser = async (req, res) => {
     console.log(req.body);
     const { name, email, password } = req.body;
 
+    const oldUser = await User.findOne({ email });
+
+    if (oldUser) {
+      return res
+        .status(200)
+        .json({ message: "A user already exists with this email!" });
+    }
+
     const hashedPW = await hash(password + "", 10);
 
     const user = await User.create({ name, email, password: hashedPW });

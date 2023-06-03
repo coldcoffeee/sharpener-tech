@@ -7,6 +7,7 @@ const passwordRegExp = /^(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
 const nameWarning = document.getElementById("name-warning");
 const emailWarning = document.getElementById("email-warning");
 const passwordWarning = document.getElementById("password-warning");
+const duplicateWarning = document.getElementById("duplicate-warning");
 
 document.getElementById("signup").addEventListener("click", init);
 window.addEventListener(
@@ -56,6 +57,11 @@ async function registerUser() {
     });
     if (res.status === 201) {
       window.location = res.data.redirect;
+    } else if (res.status === 200) {
+      duplicateWarning.style.display = "block";
+      setTimeout(() => {
+        duplicateWarning.style.display = "none";
+      }, 4000);
     }
   } catch (err) {
     console.error("Something went wrong!");
