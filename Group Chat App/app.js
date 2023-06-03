@@ -11,7 +11,12 @@ const app = express();
 
 require("dotenv").config();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://127.0.0.1:3000",
+    methods: ["GET", "POST"],
+  })
+);
 app.use(
   session({
     secret: "sekretcey987123",
