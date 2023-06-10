@@ -31,9 +31,13 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 const signupRoutes = require("./routes/signupRoutes");
+const loginRoutes = require("./routes/loginRoutes");
 
 app.use("/signup", signupRoutes);
-
+app.use("/login", loginRoutes);
+app.use("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "views", "404.html"));
+});
 (async () => {
   const connection = await mysql.createConnection({
     host: "localhost",

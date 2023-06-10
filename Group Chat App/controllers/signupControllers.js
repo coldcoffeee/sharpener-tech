@@ -12,7 +12,7 @@ exports.registerUser = async (req, res) => {
     console.log(req.body);
     const { name, email, password } = req.body;
 
-    const oldUser = await User.findOne({ email });
+    const oldUser = await User.findOne({ where: { email } });
 
     if (oldUser) {
       return res
