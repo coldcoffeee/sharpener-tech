@@ -122,7 +122,7 @@ async function sendMessage() {
     });
 
     document.getElementById("message").value = "";
-    fetchMessages(2);
+    // fetchMessages(2);
   } catch (err) {
     console.error(err);
   }
@@ -130,4 +130,6 @@ async function sendMessage() {
 
 document.getElementById("send").onclick = sendMessage;
 
-// setInterval(fetchMessages(2), 500);
+setInterval(async () => {
+  await fetchMessages(2);
+}, 1000);
