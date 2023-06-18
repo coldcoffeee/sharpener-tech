@@ -3,6 +3,8 @@ const rootDir = require("../utils/root-dir");
 const User = require("../models/userModel");
 const { compare } = require("bcrypt");
 
+const activeUsers = {};
+
 exports.getLoginPage = (req, res) => {
   res.sendFile(path.join(rootDir, "views", "login.html"));
 };
@@ -22,6 +24,9 @@ exports.loginUser = async (req, res) => {
       req.session.userId = user.id;
       req.session.user = user;
       req.session.validated = true;
+
+      activeUsers[user.id] = [user.name, email];
+
       return res.status(201).json({ redirect: "/chat" });
     } else {
       console.log(status, "\n\n");
@@ -33,4 +38,11 @@ exports.loginUser = async (req, res) => {
   }
 };
 
+exports.logoutUser = (req, res) => {
+  delete activeUsers[req.session.userId];
+  req.session.destroy();
+  res.redirect("/login");
+};
+
+exports.activeUsers = activeUsers;
 // res.status(201).json({ message: "Success", redirect: "/login" });

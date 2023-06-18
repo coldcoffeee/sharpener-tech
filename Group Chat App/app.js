@@ -32,9 +32,14 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const signupRoutes = require("./routes/signupRoutes");
 const loginRoutes = require("./routes/loginRoutes");
+const chatRoutes = require("./routes/chatRoutes");
+const groupRoutes = require("./routes/groupRoutes");
 
 app.use("/signup", signupRoutes);
 app.use("/login", loginRoutes);
+app.use("/chat", chatRoutes);
+app.use("/group", groupRoutes);
+
 app.use("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "404.html"));
 });
@@ -48,6 +53,22 @@ app.use("/", (req, res) => {
   await connection.query(`CREATE DATABASE IF NOT EXISTS chat_app;`);
 
   console.log("here");
+
+  const User = require("./models/userModel");
+  const Chat = require("./models/chatModel");
+  const Group = require("./models/groupModel");
+
+  User.hasMany(Chat);
+  Chat.belongsTo(User);
+
+  User.belongsToMany(Group, { through: "UserGroup" });
+  Group.belongsToMany(User, { through: "UserGroup" });
+
+  Group.belongsToMany(User, { as: "admin", through: "GroupAdmin" });
+
+  Group.hasMany(Chat);
+  Chat.belongsTo(Group);
+
   // await db.sync({ force: true });
   await db.sync();
 
