@@ -1,6 +1,6 @@
 const path = require("path");
 const rootDir = require("../utils/root-dir");
-
+const { Op } = require("sequelize");
 const Chat = require("../models/chatModel");
 
 exports.getActiveUsers = (req, res) => {
@@ -29,16 +29,38 @@ exports.saveMessage = async (req, res) => {
 exports.getMessages = async (req, res) => {
   try {
     const groupId = req.get("groupId");
+    const lastMessageId = req.get("lastMessageId");
     const messages = await Chat.findAll({
       where: {
         userId: req.session.userId,
         groupId,
+        id: {
+          [Op.gt]: lastMessageId,
+        },
       },
       raw: true,
     });
 
-    res.status(200).json({ messages, groupId });
+    res.status(200).json({ messages });
   } catch (err) {
+    console.log(err);
+    res.status(501).json({ message: "Something went wrong" });
+  }
+};
+
+exports.getAllGroups = async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const messages = await Chat.findAll({
+      where: {
+        userId,
+      },
+      raw: true,
+      // order: sequelize.col("id"),
+    });
+    res.status(200).json({ messages });
+  } catch (err) {
+    console.log(err);
     res.status(501).json({ message: "Something went wrong" });
   }
 };

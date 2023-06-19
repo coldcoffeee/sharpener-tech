@@ -9,6 +9,28 @@ const usersDiv = document.getElementById("users");
 const chatBox = document.getElementById("chatBox");
 
 let USER_TOGGLE = true;
+// let lastMessageId = null;
+
+onload = async () => {
+  try {
+    const res = await axios.get(host + "/chat/groups");
+    const { messages } = res.data;
+    const storedMessages = {};
+    for (const messageObj of messages) {
+      if (storedMessages[messageObj.groupId]) {
+        storedMessages[messageObj.groupId].push(messageObj.message);
+      } else {
+        storedMessages[messageObj.groupId] = [messageObj.message];
+      }
+      localStorage.setItem(messageObj.groupId, messageObj.id);
+    }
+    // console.log(storedMessages);
+    localStorage.setItem("storedMessages", JSON.stringify(storedMessages));
+    // console.log(localStorage.getItem("storedMessages"));
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 showGroupsButton.addEventListener("click", () => {
   groupsDiv.classList.toggle("hidden");
@@ -93,19 +115,34 @@ function showMessage(message) {
 async function fetchMessages(groupId) {
   try {
     if (groupId === -1) return null;
+
+    const storedMessages = JSON.parse(localStorage.getItem("storedMessages"));
+
+    let lastMessageId = localStorage.getItem(groupId);
+
+    if (!lastMessageId) lastMessageId = 0;
+
     const res = await axios.get(host + "/chat/all", {
       headers: {
         groupId,
+        lastMessageId,
       },
     });
 
-    const { messages, groupId: receivedId } = res.data;
+    const { messages } = res.data;
 
-    chatBox.innerHTML = "";
+    if (messages.length > 0)
+      localStorage.setItem(groupId, messages[messages.length - 1].id);
+    else return;
+
+    console.log(messages);
     for (const message of messages) {
+      storedMessages[groupId].push(message.message);
       showMessage(message.message);
-      console.log(message.message);
+      console.log(message);
     }
+    localStorage.setItem("storedMessages", JSON.stringify(storedMessages));
+    chatBox.scrollTop = chatBox.scrollHeight;
   } catch (err) {
     console.error(err);
   }
@@ -122,7 +159,6 @@ async function sendMessage() {
     });
 
     document.getElementById("message").value = "";
-    // fetchMessages(2);
   } catch (err) {
     console.error(err);
   }
@@ -130,6 +166,20 @@ async function sendMessage() {
 
 document.getElementById("send").onclick = sendMessage;
 
+loadGroupchat(2);
+
 setInterval(async () => {
   await fetchMessages(2);
-}, 1000);
+}, 2000);
+
+function loadGroupchat(groupId) {
+  chatBox.innerHTML = "";
+  const storedMessages = JSON.parse(localStorage.getItem("storedMessages"));
+  for (const message of storedMessages[groupId]) {
+    showMessage(message);
+  }
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  chatBox.scrollTop = chatBox.scrollHeight;
+});

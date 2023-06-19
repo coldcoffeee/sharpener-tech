@@ -6,6 +6,7 @@ const chatControllers = require("../controllers/chatControllers");
 router.get("/", auth.isAuthorised, chatControllers.getChatPage);
 router.get("/activeUsers", auth.isAuthorised, chatControllers.getActiveUsers);
 router.get("/all", chatControllers.getMessages);
+router.get("/groups", chatControllers.getAllGroups);
 
 router.post("/saveMessage", chatControllers.saveMessage);
 
