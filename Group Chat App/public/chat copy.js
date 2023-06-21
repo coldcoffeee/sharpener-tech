@@ -9,33 +9,27 @@ const usersDiv = document.getElementById("users");
 const chatBox = document.getElementById("chatBox");
 
 let USER_TOGGLE = true;
-let GROUP_TOGGLE = true;
-let GROUP_ID = 0;
 // let lastMessageId = null;
 
-// onload = async () => {
-//   try {
-//     const res = await axios.get(host + "/chat/groups");
-//     const { messages } = res.data;
-//     const storedMessages = {};
-//     for (const messageObj of messages) {
-//       if (storedMessages[messageObj.groupId]) {
-//         storedMessages[messageObj.groupId].push(messageObj.message);
-//       } else {
-//         storedMessages[messageObj.groupId] = [messageObj.message];
-//       }
-//       localStorage.setItem(messageObj.groupId, messageObj.id);
-//     }
-//     // console.log(storedMessages);
-//     localStorage.setItem("storedMessages", JSON.stringify(storedMessages));
-//     // console.log(localStorage.getItem("storedMessages"));
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
-onload = () => {
-  loadGroup(null, GROUP_ID);
+onload = async () => {
+  try {
+    const res = await axios.get(host + "/chat/groups");
+    const { messages } = res.data;
+    const storedMessages = {};
+    for (const messageObj of messages) {
+      if (storedMessages[messageObj.groupId]) {
+        storedMessages[messageObj.groupId].push(messageObj.message);
+      } else {
+        storedMessages[messageObj.groupId] = [messageObj.message];
+      }
+      localStorage.setItem(messageObj.groupId, messageObj.id);
+    }
+    // console.log(storedMessages);
+    localStorage.setItem("storedMessages", JSON.stringify(storedMessages));
+    // console.log(localStorage.getItem("storedMessages"));
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 showGroupsButton.addEventListener("click", () => {
@@ -50,11 +44,6 @@ showGroupsButton.addEventListener("click", () => {
   usersDiv.classList.remove("lg:w-3/12");
   usersDiv.classList.remove("md:w-1/2");
   usersDiv.classList.remove("sm:w-full");
-
-  if (GROUP_TOGGLE) {
-    appendGroups();
-    GROUP_TOGGLE = false;
-  } else GROUP_TOGGLE = true;
 });
 
 showUsersButton.addEventListener("click", () => {
@@ -114,59 +103,6 @@ async function appendActiveUsers() {
   }
 }
 
-async function appendGroups() {
-  try {
-    const res = await axios.get(host + "/group/all");
-
-    const { userGroups: groups } = res.data;
-
-    // groupsDiv.children = [groupsDiv.children[0]];
-
-    groupsDiv.innerHTML = `
-    <div class="bg-gray-950 rounded flex p-4 items-center mb-3">
-            <button
-              class="text-white h-full bg-indigo-500 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-lg w-full text-center"
-              onclick="createNewGroup()"
-            >
-              New Group
-            </button>
-          </div>
-    `;
-
-    for (const group of groups) {
-      groupsDiv.innerHTML += `
-      <div class="bg-gray-800 rounded flex p-4 items-center mb-3" onclick="loadGroup(this, ${group.id})">
-          <span class="title-font font-medium text-white w-full text-center">
-            ${group.name}
-          </span>
-      </div>
-      `;
-    }
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-async function loadGroup(element, groupId) {
-  if (groupId === 0) {
-    document.getElementById("groupName").textContent = "Chatster";
-    chatBox.textContent =
-      "Please select a group or create one to begin chatting!";
-    document.getElementById("ipHandler").style.display = "none";
-  } else {
-    document.getElementById("groupName").textContent =
-      element.lastElementChild.textContent;
-    chatBox.textContent = "";
-    document.getElementById("ipHandler").style.display = "";
-    await loadGroupchat(groupId);
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    // await fetchMessages(groupId);
-    GROUP_ID = groupId;
-    showGroupsButton.click();
-  }
-}
-
 function showMessage(message) {
   chatBox.innerHTML += `
   <div class="bg-gray-800 rounded text-start p-4 my-3 mx-3">
@@ -174,14 +110,13 @@ function showMessage(message) {
 </div>
   `;
 }
-
 /*****************************BACKEND******************************/
 
 async function fetchMessages(groupId) {
   try {
-    if (groupId <= 0) return null;
+    if (groupId === -1) return null;
 
-    let storedMessages = JSON.parse(localStorage.getItem("storedMessages"));
+    const storedMessages = JSON.parse(localStorage.getItem("storedMessages"));
 
     let lastMessageId = localStorage.getItem(groupId);
 
@@ -201,17 +136,12 @@ async function fetchMessages(groupId) {
     else return;
 
     console.log(messages);
-    if (!storedMessages) storedMessages = { groupId: [] };
-    if (!storedMessages[groupId]) storedMessages[groupId] = [];
     for (const message of messages) {
       storedMessages[groupId].push(message.message);
       showMessage(message.message);
       console.log(message);
     }
-    await localStorage.setItem(
-      "storedMessages",
-      JSON.stringify(storedMessages)
-    );
+    localStorage.setItem("storedMessages", JSON.stringify(storedMessages));
     chatBox.scrollTop = chatBox.scrollHeight;
   } catch (err) {
     console.error(err);
@@ -225,7 +155,7 @@ async function sendMessage() {
 
     const res = await axios.post(host + "/chat/saveMessage", {
       message,
-      groupId: GROUP_ID,
+      groupId: 2,
     });
 
     document.getElementById("message").value = "";
@@ -236,29 +166,20 @@ async function sendMessage() {
 
 document.getElementById("send").onclick = sendMessage;
 
-setInterval(async () => {
-  await fetchMessages(GROUP_ID);
-}, 1000);
+loadGroupchat(2);
 
-async function loadGroupchat(groupId) {
+setInterval(async () => {
+  await fetchMessages(2);
+}, 2000);
+
+function loadGroupchat(groupId) {
   chatBox.innerHTML = "";
   const storedMessages = JSON.parse(localStorage.getItem("storedMessages"));
-  if (!storedMessages || !storedMessages[groupId]) return;
   for (const message of storedMessages[groupId]) {
     showMessage(message);
   }
 }
 
-// window.addEventListener("DOMContentLoaded", () => {
-// });
-
-async function createNewGroup() {
-  try {
-    const newGroupForm = document.getElementById("newGroupForm");
-
-    newGroupForm.classList.toggle("-z-10");
-    newGroupForm.classList.toggle("z-10");
-  } catch (err) {
-    console.error(err);
-  }
-}
+window.addEventListener("DOMContentLoaded", () => {
+  chatBox.scrollTop = chatBox.scrollHeight;
+});

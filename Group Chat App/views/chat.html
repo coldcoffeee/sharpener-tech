@@ -30,7 +30,7 @@
       </div>
     </header>
 
-    <section class="text-gray-400 bg-gray-900 body-font mx-auto">
+    <section class="text-gray-400 bg-gray-900 body-font mx-auto relative">
       <div
         class="px-5 py-24 flex justify-center items-center h-screen flex items-baseline"
       >
@@ -39,9 +39,12 @@
           id="groups"
         >
           <div class="bg-gray-950 rounded flex p-4 items-center mb-3">
-            <span class="title-font font-medium text-white w-full text-center">
-              My Groups
-            </span>
+            <button
+              class="text-white h-full bg-indigo-500 border-0 py-2 px-4 focus:outline-none hover:bg-indigo-600 rounded text-lg w-full text-center"
+              onclick="createNewGroup()"
+            >
+              New Group
+            </button>
           </div>
           <!-- Additional div elements can be added here for more groups -->
         </div>
@@ -59,6 +62,7 @@
               </button>
               <h1
                 class="title-font sm:text-3xl text-xl font-medium text-white mb-3 pb-3"
+                id="groupName"
               >
                 Group Name
               </h1>
@@ -81,7 +85,7 @@
               </div> -->
             </div>
 
-            <div class="flex my-2 relative z-10">
+            <div class="flex my-2 relative z-10" id="ipHandler">
               <input
                 type="text"
                 class="bg-white rounded-l-md py-2 px-4 w-full focus:outline-none text-lg"
@@ -97,6 +101,108 @@
             </div>
           </div>
         </div>
+
+        <!-- <div class="w-9/12 ml-3 absolute bg-white -z-10" id="newGroupForm"> -->
+        <div class="fixed z-10 inset-0 overflow-y-auto">
+          <div
+            class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+          >
+            <!-- Background overlay -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
+            </div>
+
+            <!-- Modal content -->
+            <div
+              class="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+            >
+              <div class="bg-gray-900 px-4 py-6 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-white">
+                  Create New Group
+                </h3>
+                <p class="mt-1 text-sm text-gray-400">
+                  Add users to the group and specify admin privileges.
+                </p>
+              </div>
+              <div class="bg-gray-800 px-4 py-6 sm:px-6">
+                <div class="mb-4">
+                  <label
+                    for="group-name"
+                    class="block text-sm font-medium text-gray-400"
+                    >Group Name</label
+                  >
+                  <input
+                    type="text"
+                    id="group-name"
+                    name="group-name"
+                    required
+                    class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm bg-gray-600 bg-opacity-20 text-gray-100 rounded-md border-gray-600 focus:outline-none py-2 px-3"
+                  />
+                </div>
+                <div class="max-h-40 overflow-y-auto mb-4">
+                  <p class="block text-sm font-medium text-gray-400 mb-2">
+                    Users
+                  </p>
+                  <div class="space-y-2">
+                    <!-- Sample user item -->
+                    <div
+                      class="flex items-center justify-between py-2 px-3 bg-gray-700 rounded-md"
+                    >
+                      <div class="flex-grow">
+                        <p class="text-sm font-medium text-white">John Doe</p>
+                        <p class="text-xs text-gray-500">
+                          john.doe@example.com
+                        </p>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <label for="user1-add" class="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="user1-add"
+                            name="user1-add"
+                            class="form-checkbox"
+                          />
+                          <span class="ml-2 text-sm text-gray-400">Add</span>
+                        </label>
+                        <label for="user1-admin" class="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="user1-admin"
+                            name="user1-admin"
+                            class="form-checkbox"
+                            disabled
+                          />
+                          <span class="ml-2 text-sm text-gray-400">Admin</span>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- Repeat the above user item for each user in the backend array -->
+                    <!-- Replace user1-add and user1-admin with appropriate dynamic IDs -->
+                  </div>
+                </div>
+                <div class="flex justify-end">
+                  <button
+                    type="button"
+                    class="text-white bg-blue-500 border-0 py-2 px-4 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                  >
+                    Create Group
+                  </button>
+                </div>
+              </div>
+              <div
+                class="bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
+              >
+                <button
+                  type="button"
+                  class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-700 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div
           class="p-4 w-3/12 overflow-y-auto bg-gray-950 px-8 pt-16 pb-24 ml-3 h-5/6 rounded-lg overflow-hidden text-center hidden"
           id="users"
