@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=0.1" />
     <script
       type="module"
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
@@ -17,7 +17,9 @@
   </head>
   <body class="bg-gray-900">
     <header class="text-gray-400 bg-gray-950 body-font">
-      <div class="container mx-auto flex flex-wrap p-5 items-center">
+      <div
+        class="container mx-auto flex flex-wrap p-5 items-center justify-between"
+      >
         <a
           class="flex title-font font-medium items-center text-white mb-4 md:mb-0"
         >
@@ -25,8 +27,13 @@
             name="chatbox-ellipses"
             style="font-size: 1.75rem"
           ></ion-icon>
-          <span class="ml-3 text-xl">Chatster</span>
+          <span class="ml-3 text-xl" id="chatster">Chatster</span>
         </a>
+        <a
+          href="/login/logout"
+          class="text-white bg-red-600 border-0 py-2 px-4 rounded focus:outline-none hover:bg-red-400 transition-colors duration-200"
+          >Logout</a
+        >
       </div>
     </header>
 
@@ -102,14 +109,16 @@
           </div>
         </div>
 
-        <!-- <div class="w-9/12 ml-3 absolute bg-white -z-10" id="newGroupForm"> -->
-        <div class="fixed z-10 inset-0 overflow-y-auto">
+        <div class="fixed -z-10 inset-0 overflow-y-auto" id="modal">
           <div
             class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
           >
             <!-- Background overlay -->
             <div class="fixed inset-0 transition-opacity" aria-hidden="true">
-              <div class="absolute inset-0 bg-gray-900 opacity-75"></div>
+              <div
+                class="absolute inset-0 bg-gray-900 opacity-75"
+                id="overlay"
+              ></div>
             </div>
 
             <!-- Modal content -->
@@ -137,13 +146,15 @@
                     name="group-name"
                     required
                     class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm bg-gray-600 bg-opacity-20 text-gray-100 rounded-md border-gray-600 focus:outline-none py-2 px-3"
+                    maxlength="30"
+                    minlength="1"
                   />
                 </div>
-                <div class="max-h-40 overflow-y-auto mb-4">
-                  <p class="block text-sm font-medium text-gray-400 mb-2">
-                    Users
-                  </p>
-                  <div class="space-y-2">
+                <p class="block text-sm font-medium text-gray-400 mb-2">
+                  Users
+                </p>
+                <div class="max-h-80 overflow-y-auto mb-4">
+                  <div class="space-y-2" id="usersList">
                     <!-- Sample user item -->
                     <div
                       class="flex items-center justify-between py-2 px-3 bg-gray-700 rounded-md"
@@ -161,6 +172,8 @@
                             id="user1-add"
                             name="user1-add"
                             class="form-checkbox"
+                            value="1"
+                            onchange="let admin = this.parentElement.nextElementSibling.firstElementChild; admin.disabled = !admin.disabled;"
                           />
                           <span class="ml-2 text-sm text-gray-400">Add</span>
                         </label>
@@ -176,6 +189,7 @@
                         </label>
                       </div>
                     </div>
+
                     <!-- Repeat the above user item for each user in the backend array -->
                     <!-- Replace user1-add and user1-admin with appropriate dynamic IDs -->
                   </div>
@@ -184,6 +198,7 @@
                   <button
                     type="button"
                     class="text-white bg-blue-500 border-0 py-2 px-4 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                    id="createGroup"
                   >
                     Create Group
                   </button>
@@ -195,8 +210,130 @@
                 <button
                   type="button"
                   class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-700 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  id="closeForm"
                 >
                   Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fixed -z-10 inset-0 overflow-y-auto" id="adminModal">
+          <div
+            class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+          >
+            <!-- Background overlay -->
+            <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+              <div
+                class="absolute inset-0 bg-gray-900 opacity-75"
+                id="adminOverlay"
+              ></div>
+            </div>
+
+            <!-- Modal content -->
+            <div
+              class="inline-block align-bottom bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+            >
+              <div class="bg-gray-900 px-4 py-6 sm:px-6">
+                <h3 class="text-lg leading-6 font-medium text-white">
+                  Edit Group
+                </h3>
+                <p class="mt-1 text-sm text-gray-400">
+                  Modify the group name, participants and their admin
+                  privileges.
+                </p>
+              </div>
+              <div class="bg-gray-800 px-4 py-6 sm:px-6">
+                <div class="mb-4">
+                  <label
+                    for="group-name-admin"
+                    class="block text-sm font-medium text-gray-400"
+                    >Group Name</label
+                  >
+                  <input
+                    type="text"
+                    id="group-name-admin"
+                    name="group-name-admin"
+                    required
+                    class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm bg-gray-600 bg-opacity-20 text-gray-100 rounded-md border-gray-600 focus:outline-none py-2 px-3"
+                    maxlength="30"
+                    minlength="1"
+                  />
+                </div>
+                <p class="block text-sm font-medium text-gray-400 mb-2">
+                  Users
+                </p>
+                <div class="max-h-80 overflow-y-auto mb-4">
+                  <div class="space-y-2" id="usersListAdmin">
+                    <!-- Sample user item -->
+                    <div
+                      class="flex items-center justify-between py-2 px-3 bg-gray-700 rounded-md"
+                    >
+                      <div class="flex-grow">
+                        <p class="text-sm font-medium text-white">John Doe</p>
+                        <p class="text-xs text-gray-500">
+                          john.doe@example.com
+                        </p>
+                      </div>
+                      <div class="flex items-center space-x-2">
+                        <label for="user1-add" class="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="user1-add"
+                            name="user1-add"
+                            class="form-checkbox"
+                            value="1"
+                            onchange="let admin = this.parentElement.nextElementSibling.firstElementChild; admin.disabled = !admin.disabled;"
+                          />
+                          <span class="ml-2 text-sm text-gray-400">Add</span>
+                        </label>
+                        <label for="user1-admin" class="flex items-center">
+                          <input
+                            type="checkbox"
+                            id="user1-admin"
+                            name="user1-admin"
+                            class="form-checkbox"
+                            disabled
+                          />
+                          <span class="ml-2 text-sm text-gray-400">Admin</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <!-- Repeat the above user item for each user in the backend array -->
+                    <!-- Replace user1-add and user1-admin with appropriate dynamic IDs -->
+                  </div>
+                </div>
+                <div class="flex justify-end">
+                  <button
+                    type="button"
+                    class="text-white bg-blue-500 border-0 py-2 px-4 focus:outline-none hover:bg-blue-600 rounded text-lg"
+                    id="updateGroup"
+                  >
+                    Update
+                  </button>
+                </div>
+              </div>
+              <div
+                class="bg-gray-800 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse"
+              >
+                <button
+                  type="button"
+                  class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-700 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  id="closeAdminForm"
+                  onclick="clearUpdateGroupForm()"
+                >
+                  Close
+                </button>
+
+                <button
+                  type="button"
+                  class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-700 text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  id="deleteGroup"
+                  onclick="deleteGroup()"
+                >
+                  Delete
                 </button>
               </div>
             </div>

@@ -35,6 +35,7 @@ const loginRoutes = require("./routes/loginRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 
+app.get("/", signupRoutes);
 app.use("/signup", signupRoutes);
 app.use("/login", loginRoutes);
 app.use("/chat", chatRoutes);
@@ -61,10 +62,14 @@ app.use("/", (req, res) => {
   User.hasMany(Chat);
   Chat.belongsTo(User);
 
-  User.belongsToMany(Group, { through: "UserGroup" });
-  Group.belongsToMany(User, { through: "UserGroup" });
+  User.belongsToMany(Group, { through: "UserGroup", onDelete: "CASCADE" });
+  Group.belongsToMany(User, { through: "UserGroup", onDelete: "CASCADE" });
 
-  Group.belongsToMany(User, { as: "admin", through: "GroupAdmin" });
+  Group.belongsToMany(User, {
+    as: "admin",
+    through: "GroupAdmin",
+    onDelete: "CASCADE",
+  });
 
   Group.hasMany(Chat);
   Chat.belongsTo(Group);
